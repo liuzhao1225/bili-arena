@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/server";
 import { LogOut, Settings } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 export async function Navbar() {
   const supabase = await createClient();
@@ -26,8 +27,10 @@ export async function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95">
       <div className="container mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="font-semibold text-primary">
-          Bili Arena
+        <Link href="/" className="flex items-center gap-1.5 font-bold">
+          <Logo className="size-7" />
+          <span className="text-[#00A1D6]">Bili</span>
+          <span className="-ml-1 text-[#FB7299]">Arena</span>
         </Link>
         <nav className="flex items-center gap-4">
           {user ? (

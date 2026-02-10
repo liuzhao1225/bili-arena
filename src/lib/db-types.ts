@@ -46,6 +46,6 @@ export function matchRecordLabel(v: { match_count: number; win_count?: number; l
   return `总对局数 ${n}，${w}胜 ${l}负 ${d}平`;
 }
 
-export function videoRank(v: Video): number {
+export function videoRank(v: Pick<Video, "trueskill_mu" | "trueskill_sigma">): number {
   return v.trueskill_mu - 3 * v.trueskill_sigma;
 }

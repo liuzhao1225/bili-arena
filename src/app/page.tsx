@@ -20,7 +20,7 @@ export default async function HomePage() {
       .eq("status", "active");
     const withRank = (videos ?? []).map((v) => ({
       ...v,
-      rank: videoRank(v as { trueskill_mu: number; trueskill_sigma: number }),
+      rank: videoRank(v),
     }));
     withRank.sort((a, b) => b.rank - a.rank);
     for (const v of withRank) {
