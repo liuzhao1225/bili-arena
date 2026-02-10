@@ -119,7 +119,7 @@ export function VideoComments({
               type="submit"
               size="sm"
               disabled={submitting || !content.trim()}
-              className="rounded-full bg-[#00a1d6] text-white hover:bg-[#00a1d6]/90 disabled:opacity-40"
+              className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40"
             >
               {submitting ? "…" : "发布"}
             </Button>

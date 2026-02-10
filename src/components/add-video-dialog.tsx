@@ -88,7 +88,7 @@ export function AddVideoDialog({
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? setOpen(true) : closeDialog())}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button className="bg-bili-pink text-white hover:bg-bili-pink/90">
           <PlusCircle className="mr-2 size-4" />
           添加视频
         </Button>

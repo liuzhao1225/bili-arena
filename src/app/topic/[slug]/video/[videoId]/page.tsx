@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { videoRank, matchRecordLabel } from "@/lib/db-types";
+import { displayScore, matchRecordLabel } from "@/lib/db-types";
 import { BilibiliPlayer } from "@/components/bilibili-player";
 import { VideoComments } from "@/components/video-comments";
 import { getCommentsForVideos } from "@/actions/comment";
@@ -27,7 +27,7 @@ export default async function VideoDetailPage({
     data: { user },
   } = await supabase.auth.getUser();
   const comments = await getCommentsForVideos([videoId], user?.id);
-  const score = videoRank(video);
+  const score = displayScore(video);
 
   return (
     <div className="space-y-6">
@@ -45,7 +45,7 @@ export default async function VideoDetailPage({
         <h1 className="text-xl font-bold">{video.title}</h1>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
           {video.up_name && <span>UP主：{video.up_name}</span>}
-          <span>得分：{score.toFixed(1)}</span>
+          <span>得分：{score}</span>
           <span>{matchRecordLabel(video)}</span>
           <a
             href={`https://www.bilibili.com/video/${video.bvid}`}

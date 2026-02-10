@@ -46,10 +46,10 @@ export function TopicCard({
         </CardHeader>
       </Link>
       <CardContent className="flex gap-2 pt-0">
-        <Button asChild size="sm" className="flex-1 bg-[#00a1d6] text-white hover:bg-[#00a1d6]/90">
+        <Button asChild size="sm" className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90">
           <Link href={`/topic/${topic.slug}`}>排行榜</Link>
         </Button>
-        <Button asChild size="sm" className="flex-1 bg-[#fb7299] text-white hover:bg-[#fb7299]/90">
+        <Button asChild size="sm" className="flex-1 bg-bili-pink text-white hover:bg-bili-pink/90">
           <Link href={`/topic/${topic.slug}/pk`}>
             <PlusCircle className="mr-1 size-4" />
             PK

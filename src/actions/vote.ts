@@ -121,7 +121,7 @@ export async function getVideoScores(videoIds: [string, string]) {
     .select("id, trueskill_mu, trueskill_sigma, match_count, win_count, loss_count, draw_count")
     .in("id", videoIds);
   const rank = (v: { trueskill_mu: number; trueskill_sigma: number }) =>
-    v.trueskill_mu - 3 * v.trueskill_sigma;
+    Math.round((v.trueskill_mu - 3 * v.trueskill_sigma) * 40 + 1000);
   const left = data?.find((r) => r.id === videoIds[0]);
   const right = data?.find((r) => r.id === videoIds[1]);
   const toRecord = (

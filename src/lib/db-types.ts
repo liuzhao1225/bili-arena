@@ -49,3 +49,8 @@ export function matchRecordLabel(v: { match_count: number; win_count?: number; l
 export function videoRank(v: Pick<Video, "trueskill_mu" | "trueskill_sigma">): number {
   return v.trueskill_mu - 3 * v.trueskill_sigma;
 }
+
+/** 将原始 TrueSkill 分数映射为 ELO 风格展示分数（初始 1000，整数） */
+export function displayScore(v: Pick<Video, "trueskill_mu" | "trueskill_sigma">): number {
+  return Math.round(videoRank(v) * 40 + 1000);
+}

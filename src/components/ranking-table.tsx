@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { videoRank, matchRecordLabel, type Video } from "@/lib/db-types";
+import { videoRank, displayScore, matchRecordLabel, type Video } from "@/lib/db-types";
 
 export function RankingTable({
   videos,
@@ -54,7 +54,7 @@ export function RankingTable({
             </TableCell>
             <TableCell className="text-muted-foreground">{v.up_name ?? "—"}</TableCell>
             <TableCell className="text-right font-mono tabular-nums">
-              {videoRank(v).toFixed(1)}
+              {displayScore(v)}
             </TableCell>
             <TableCell className="text-right text-sm tabular-nums">
               {matchRecordLabel(v)}

@@ -140,7 +140,7 @@ export function PkBattle({ topicSlug }: { topicSlug: string }) {
 
       {/* 按钮区 */}
       {result ? (
-        <Button className="w-full bg-[#fb7299] text-white hover:bg-[#fb7299]/90" onClick={handleNext}>
+        <Button className="w-full bg-bili-pink text-white hover:bg-bili-pink/90" onClick={handleNext}>
           下一组
         </Button>
       ) : (
@@ -163,7 +163,7 @@ export function PkBattle({ topicSlug }: { topicSlug: string }) {
           <div className="space-y-3">
             <div className="rounded-lg border p-3">
               <p className="line-clamp-2 font-medium">{left.title}</p>
-              <p className="mt-1 text-2xl font-mono tabular-nums">得分 {result.leftScore.toFixed(1)}</p>
+              <p className="mt-1 text-2xl font-mono tabular-nums">得分 {Math.round(result.leftScore)}</p>
               <p className="text-muted-foreground text-sm">
                 {matchRecordLabel({
                   match_count: result.leftMatchCount,
@@ -178,7 +178,7 @@ export function PkBattle({ topicSlug }: { topicSlug: string }) {
           <div className="space-y-3">
             <div className="rounded-lg border p-3">
               <p className="line-clamp-2 font-medium">{right.title}</p>
-              <p className="mt-1 text-2xl font-mono tabular-nums">得分 {result.rightScore.toFixed(1)}</p>
+              <p className="mt-1 text-2xl font-mono tabular-nums">得分 {Math.round(result.rightScore)}</p>
               <p className="text-muted-foreground text-sm">
                 {matchRecordLabel({
                   match_count: result.rightMatchCount,
