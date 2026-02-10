@@ -104,7 +104,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
         {/* ---- 账号密码 Tab ---- */}
         <TabsContent value="password" className="space-y-4">
           {isRegister ? (
-            <form action={signupAction} className="space-y-3">
+            <form key="register" action={signupAction} className="space-y-3">
               <div className="space-y-2">
                 <Label htmlFor="reg-username">用户名</Label>
                 <Input
@@ -152,7 +152,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
               </p>
             </form>
           ) : (
-            <form onSubmit={handlePasswordLogin} className="space-y-3">
+            <form key="login" onSubmit={handlePasswordLogin} className="space-y-3">
               <div className="space-y-2">
                 <Label htmlFor="login-username">用户名</Label>
                 <Input
