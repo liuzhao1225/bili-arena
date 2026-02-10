@@ -43,6 +43,8 @@ export async function getPair(topicSlug: string) {
   };
 }
 
+const MAX_RETRIES = 3;
+
 export async function submitVote(
   topicId: string,
   winnerId: string,
@@ -55,63 +57,53 @@ export async function submitVote(
   } = await supabase.auth.getUser();
   if (!user) return { error: "请先登录" };
 
-  const { data: winner } = await supabase
-    .from("videos")
-    .select("trueskill_mu, trueskill_sigma, match_count, win_count, loss_count, draw_count")
-    .eq("id", winnerId)
-    .single();
-  const { data: loser } = await supabase
-    .from("videos")
-    .select("trueskill_mu, trueskill_sigma, match_count, win_count, loss_count, draw_count")
-    .eq("id", loserId)
-    .single();
-  if (!winner || !loser) return { error: "视频不存在" };
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    const { data: winner } = await supabase
+      .from("videos")
+      .select("trueskill_mu, trueskill_sigma, version")
+      .eq("id", winnerId)
+      .single();
+    const { data: loser } = await supabase
+      .from("videos")
+      .select("trueskill_mu, trueskill_sigma, version")
+      .eq("id", loserId)
+      .single();
+    if (!winner || !loser) return { error: "视频不存在" };
 
-  const ratings = isDraw
-    ? updateRatings1v1Draw(
-        winner.trueskill_mu, winner.trueskill_sigma,
-        loser.trueskill_mu, loser.trueskill_sigma
-      )
-    : updateRatings1v1(
-        winner.trueskill_mu, winner.trueskill_sigma,
-        loser.trueskill_mu, loser.trueskill_sigma
-      );
-  const [wMu, wSigma] = ratings[0];
-  const [lMu, lSigma] = ratings[1];
+    const ratings = isDraw
+      ? updateRatings1v1Draw(
+          winner.trueskill_mu, winner.trueskill_sigma,
+          loser.trueskill_mu, loser.trueskill_sigma
+        )
+      : updateRatings1v1(
+          winner.trueskill_mu, winner.trueskill_sigma,
+          loser.trueskill_mu, loser.trueskill_sigma
+        );
 
-  const wWin = (winner.win_count ?? 0) + (isDraw ? 0 : 1);
-  const wLoss = winner.loss_count ?? 0;
-  const wDraw = (winner.draw_count ?? 0) + (isDraw ? 1 : 0);
-  const lWin = loser.win_count ?? 0;
-  const lLoss = (loser.loss_count ?? 0) + (isDraw ? 0 : 1);
-  const lDraw = (loser.draw_count ?? 0) + (isDraw ? 1 : 0);
-  const wCount = wWin + wLoss + wDraw;
-  const lCount = lWin + lLoss + lDraw;
+    const { error: rpcErr } = await supabase.rpc("apply_vote_result", {
+      p_topic_id: topicId,
+      p_winner_id: winnerId,
+      p_loser_id: loserId,
+      p_voter_id: user.id,
+      p_is_draw: isDraw,
+      p_winner_mu: ratings[0][0],
+      p_winner_sigma: ratings[0][1],
+      p_winner_version: winner.version,
+      p_loser_mu: ratings[1][0],
+      p_loser_sigma: ratings[1][1],
+      p_loser_version: loser.version,
+    });
 
-  const { error: rpcErr } = await supabase.rpc("apply_vote_result", {
-    p_topic_id: topicId,
-    p_winner_id: winnerId,
-    p_loser_id: loserId,
-    p_voter_id: user.id,
-    p_is_draw: isDraw,
-    p_winner_mu: wMu,
-    p_winner_sigma: wSigma,
-    p_winner_match_count: wCount,
-    p_winner_win_count: wWin,
-    p_winner_loss_count: wLoss,
-    p_winner_draw_count: wDraw,
-    p_loser_mu: lMu,
-    p_loser_sigma: lSigma,
-    p_loser_match_count: lCount,
-    p_loser_win_count: lWin,
-    p_loser_loss_count: lLoss,
-    p_loser_draw_count: lDraw,
-  });
+    if (!rpcErr) {
+      revalidatePath("/topic/[slug]", "page");
+      return { error: null };
+    }
+    // 非版本冲突错误，直接返回
+    if (!rpcErr.message.includes("VERSION_CONFLICT")) return { error: rpcErr.message };
+    // 版本冲突，重试（重新读取最新数据并重新计算）
+  }
 
-  if (rpcErr) return { error: rpcErr.message };
-
-  revalidatePath("/topic/[slug]", "page");
-  return { error: null };
+  return { error: "服务器繁忙，请重试" };
 }
 
 export async function getVideoScores(videoIds: [string, string]) {
