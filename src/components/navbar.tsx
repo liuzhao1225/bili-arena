@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/server";
-import { LogOut, Settings } from "lucide-react";
+import { Github, LogOut, Settings } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 export async function Navbar() {
@@ -32,7 +32,12 @@ export async function Navbar() {
           <span className="text-[#00A1D6]">Bili</span>
           <span className="-ml-1 text-[#FB7299]">Arena</span>
         </Link>
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center gap-2">
+          <a href="https://github.com/liuzhao1225/bili-arena" target="_blank" rel="noopener noreferrer">
+            <Button variant="ghost" size="icon" className="size-8">
+              <Github className="size-4" />
+            </Button>
+          </a>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
