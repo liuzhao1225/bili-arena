@@ -3,7 +3,7 @@
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
-const EMAIL_DOMAIN = "biliarena.local";
+const EMAIL_DOMAIN = "biliarena.app";
 
 function toEmail(username: string) {
   return `${username}@${EMAIL_DOMAIN}`;

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signupWithUsername } from "@/app/login/actions";
 
-const EMAIL_DOMAIN = "biliarena.local";
+const EMAIL_DOMAIN = "biliarena.app";
 
 export function LoginForm({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
